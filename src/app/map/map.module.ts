@@ -4,10 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { MapComponent } from './map.component';
-import { CoreComponent } from './core/core.component';
 import { LayersComponent } from './layers/layers.component';
-import { NgForLayersComponent } from './layers/ngfor-layers.component';
-import { BaseLayersComponent } from './layers/baselayers.component';
 
 @NgModule({
   imports: [
@@ -18,10 +15,7 @@ import { BaseLayersComponent } from './layers/baselayers.component';
   ],
   declarations: [
     MapComponent,
-    CoreComponent,
-    BaseLayersComponent,
     LayersComponent,
-    NgForLayersComponent,
   ],
   exports: [
     MapComponent

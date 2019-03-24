@@ -1,29 +1,21 @@
 import { Component } from '@angular/core';
 
-import { circle, geoJSON, icon, latLng, Layer, marker, polygon, tileLayer } from 'leaflet';
+import { circle, geoJSON, latLng, Layer, marker, polygon, tileLayer, LatLng } from 'leaflet';
 
 import { LayersModel } from './layers.model';
 
 @Component({
   selector: 'app-map-layers',
-  templateUrl: './layers.component.html'
+  templateUrl: './layers.component.html',
+  styleUrls: ['./layers.component.less']
 })
 export class LayersComponent {
 
-  // Open Street Map and Open Cycle Map definitions
-  LAYER_OCM = {
-    id: 'opencyclemap',
-    name: 'Open Cycle Map',
-    enabled: true,
-    layer: tileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: 'Open Cycle Map'
-    })
-  };
+  // Open Street Map definition
   LAYER_OSM = {
     id: 'openstreetmap',
     name: 'Open Street Map',
-    enabled: false,
+    enabled: true,
     layer: tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
       attribution: 'Open Street Map'
@@ -36,31 +28,30 @@ export class LayersComponent {
     enabled: true,
     layer: circle([ 46.95, -122 ], { radius: 5000 })
   };
+
   polygon = {
     id: 'polygon',
     name: 'Polygon',
     enabled: true,
     layer: polygon([[ 46.8, -121.85 ], [ 46.92, -121.92 ], [ 46.87, -121.8 ]])
   };
+
   square = {
     id: 'square',
     name: 'Square',
     enabled: true,
     layer: polygon([[ 46.8, -121.55 ], [ 46.9, -121.55 ], [ 46.9, -121.7 ], [ 46.8, -121.7 ]])
   };
+
   marker = {
     id: 'marker',
     name: 'Marker',
     enabled: true,
     layer: marker([ 46.879966, -121.726909 ], {
-      icon: icon({
-        iconSize: [ 25, 41 ],
-        iconAnchor: [ 13, 41 ],
-        iconUrl: '2273e3d8ad9264b7daa5bdbf8e6b47f8.png',
-        shadowUrl: '44a526eed258222515aa21eaffd14a96.png'
-      })
+      title: 'Ora ora'
     })
   };
+
   geoJSON = {
     id: 'geoJSON',
     name: 'Geo JSON Polygon',
@@ -80,18 +71,16 @@ export class LayersComponent {
 
   // Form model object
   model = new LayersModel(
-    [ this.LAYER_OSM, this.LAYER_OCM ],
-    this.LAYER_OCM.id,
+    [ this.LAYER_OSM ],
+    this.LAYER_OSM.id,
     [ this.circle, this.polygon, this.square, this.marker, this.geoJSON ]
   );
-
 
   // Values to bind to Leaflet Directive
   layers: Layer[];
   layersControl = {
     baseLayers: {
       'Open Street Map': this.LAYER_OSM.layer,
-      'Open Cycle Map': this.LAYER_OCM.layer
     },
     overlays: {
       Circle: this.circle.layer,
@@ -101,10 +90,32 @@ export class LayersComponent {
       GeoJSON: this.geoJSON.layer
     }
   };
-  options = {
+
+  optionsSpec: any = {
     zoom: 10,
-    center: latLng(46.879966, -121.726909)
+    center: [46.879966, -121.726909]
   };
+
+  options = {
+    zoom: this.optionsSpec.zoom,
+    center: latLng(this.optionsSpec.center)
+  };
+
+  zoom = this.optionsSpec.zoom;
+  center = latLng(this.optionsSpec.center);
+
+  onCenterChange(center: LatLng) {
+    console.log("TCL: onCenterChange -> center", center);
+  }
+
+  onZoomChange(zoom: number) {
+    console.log("TCL: onZoomChange -> zoom", zoom);
+  }
+
+  goToSpb() {
+    this.center = latLng(59.935981779824935, -329.724841142268);
+    this.zoom = 12;
+  }
 
   constructor() {
     this.apply();
